@@ -1,0 +1,1 @@
+### write a program use string type and memory.
