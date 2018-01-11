@@ -1,13 +1,17 @@
 pragma solidity ^0.4.19;
 
 
+
+// define collection function 
 interface General {
     function checkValue(uint value) returns (bool);
     function loan() returns (bool);
 }
 
-contract Bank {
+contract Bank is General {
     uint amount;
+
+    // allow user can loan  
     uint constant MAX_DEBIT = 100;
     
     function Bank(uint nAmount) {
