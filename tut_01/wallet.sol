@@ -1,10 +1,54 @@
 pragma solidity ^0.4.19;
 
-contract Wallet {
-    string public name;
-    uint128 private amount;
+
+interface General {
+    function checkValue(uint value) returns (bool);
+    function loan() returns (bool);
+}
+
+contract Bank {
+    uint amount;
+    uint constant MAX_DEBIT = 100;
     
-    function Wallet(string nName, uint128 nAmount) {
+    function Bank(uint nAmount) {
+        amount = nAmount;
+    }
+    
+    function deposit(uint value) {
+        amount += value;
+    }
+    
+    function withDraw(uint value, bool allow_debit) {
+        if((allow_debit && amount >= MAX_DEBIT && value <= MAX_DEBIT) ||
+            (!allow_debit && checkValue(value)))
+            amount -= value;
+    }
+    
+    function balance() returns (uint) {
+        return amount;
+    }
+    
+    function checkValue(uint value) returns (bool) {
+        return amount >= value;
+    }
+    
+    function loan() returns (bool) {
+        return amount > 0;
+    }
+    
+    function getLoad() returns (uint) {
+        if(loan()){
+            return 0;
+        }
+        return amount;
+        
+    }
+}
+
+contract Wallet is Bank(0) {
+    string public name;
+
+    function Wallet(string nName, uint nAmount) {
         name = nName;
         amount = nAmount;
     }
@@ -17,11 +61,11 @@ contract Wallet {
         return name;
     }
     
-    function setAmount(uint128 nAmount) {
+    function setAmount(uint nAmount) {
         amount = nAmount;
     }
     
-    function getAmount() returns (uint128) {
+    function getAmount() returns (uint) {
         return amount;
     }
     
